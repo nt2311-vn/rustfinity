@@ -1,5 +1,5 @@
-use core::f32;
 use std::collections::HashMap;
+
 
 pub fn median(numbers: &mut Vec<i32>) -> f32 {
     numbers.sort();
@@ -17,6 +17,16 @@ pub fn median(numbers: &mut Vec<i32>) -> f32 {
 }
 
 pub fn mode(numbers: &Vec<i32>) -> Vec<i32> {
-    numbers.sort();
+    let mut map: HashMap<i32, i32> = HashMap::new();
 
+    for &number in numbers {
+        _ = *map.entry(number).and_modify(|val| *val += 1).or_insert(1);
+    }
+
+    let max_frequency = map.values().copied().max().unwrap_or(0);
+
+    map.into_iter()
+        .filter(|&(_, count)| count == max_frequency)
+        .map(|(key, _)| key)
+        .collect()
 }
